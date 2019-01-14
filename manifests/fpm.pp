@@ -49,21 +49,25 @@
 #   Hash of defaults params php::fpm::pool resources that will be created.
 #   Defaults is empty hash.
 #
+# [*process_control_timeout*]
+#   The php-fpm process_control_timeout
+#
 class php::fpm (
-  String $ensure                = $php::ensure,
-  $user                         = $php::fpm_user,
-  $group                        = $php::fpm_group,
-  $service_ensure               = $php::fpm_service_ensure,
-  $service_enable               = $php::fpm_service_enable,
-  $service_name                 = $php::fpm_service_name,
-  $service_provider             = $php::fpm_service_provider,
-  String $package               = $php::real_fpm_package,
-  Stdlib::Absolutepath $inifile = $php::fpm_inifile,
-  Hash $settings                = $php::real_settings,
-  $global_pool_settings         = $php::real_fpm_global_pool_settings,
-  Hash $pools                   = $php::real_fpm_pools,
-  $log_owner                    = $php::log_owner,
-  $log_group                    = $php::log_group,
+  String $ensure                                                     = $php::ensure,
+  $user                                                              = $php::fpm_user,
+  $group                                                             = $php::fpm_group,
+  $service_ensure                                                    = $php::fpm_service_ensure,
+  $service_enable                                                    = $php::fpm_service_enable,
+  $service_name                                                      = $php::fpm_service_name,
+  $service_provider                                                  = $php::fpm_service_provider,
+  String $package                                                    = $php::real_fpm_package,
+  Stdlib::Absolutepath $inifile                                      = $php::fpm_inifile,
+  Hash $settings                                                     = $php::real_settings,
+  $global_pool_settings                                              = $php::real_fpm_global_pool_settings,
+  Hash $pools                                                        = $php::real_fpm_pools,
+  $log_owner                                                         = $php::log_owner,
+  $log_group                                                         = $php::log_group,
+  Variant[Integer, Pattern[/^\d+[smhd]?$/]] $process_control_timeout = 0,
 ) {
 
   if ! defined(Class['php']) {
@@ -85,13 +89,14 @@ class php::fpm (
   }
 
   class { 'php::fpm::config':
-    user      => $user,
-    group     => $group,
-    inifile   => $inifile,
-    settings  => $real_settings,
-    log_owner => $log_owner,
-    log_group => $log_group,
-    require   => Package[$real_package],
+    user                    => $user,
+    group                   => $group,
+    inifile                 => $inifile,
+    settings                => $real_settings,
+    log_owner               => $log_owner,
+    log_group               => $log_group,
+    process_control_timeout => $process_control_timeout,
+    require                 => Package[$real_package],
   }
 
   contain 'php::fpm::config'
