@@ -47,6 +47,9 @@ describe 'php with default settings' do
                 extension => undef
               }
             }
+            'simplexml'  => {
+              package_name => 'php7.2-xml',
+            }
           }
         }
         EOS
